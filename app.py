@@ -13,10 +13,9 @@ app = Flask(__name__)
 os.makedirs("static/uploads", exist_ok=True)
 os.makedirs("static/results", exist_ok=True)
 
-# YOLOv8 modelini yükle - model yolunu buraya ekleyin
-# Kendi best.pt dosyanızın yolunu buraya yazın
-model_path = "best.pt"  # Aynı klasörde ise
-# model_path = "C:/path/to/your/best.pt"  # Tam yol ile
+
+model_path = "best.pt"
+
 
 def load_model():
     try:
@@ -63,16 +62,16 @@ def extract_plate_text(image, coords):
     try:
         x1, y1, x2, y2 = coords
         
-        # Plaka bölgesini kırp
+        # Plaka bölgesini kırptım
         plate_region = image.crop((x1, y1, x2, y2))
         
         if plate_region.size[0] == 0 or plate_region.size[1] == 0:
             return "Metin okunamadı"
         
-        # Görüntüyü büyüt
+        # Görüntüyü büyüttüm
         plate_region = plate_region.resize((plate_region.size[0]*3, plate_region.size[1]*3), Image.Resampling.LANCZOS)
         
-        # Basit OCR denemesi
+        # Basit OCR denedim
         try:
             text = pytesseract.image_to_string(plate_region, lang='eng', config='--psm 7')
             text = text.strip().replace('\n', '').replace('\r', '').replace(' ', '')
@@ -91,7 +90,7 @@ def index():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # Model kontrolü
+        # Model kontrolü sağladım
         global model
         if model is None:
             model = load_model()
@@ -109,17 +108,17 @@ def predict():
         original_image = Image.open(io.BytesIO(file.read())).convert("RGB")
         original_image.save(f"static/uploads/{original_filename}")
 
-        # YOLOv8 modeline uygun numpy array'e çevir
+        # YOLOv8 modeline uygun numpy array'e çevirdim
         img_np = np.array(original_image)
 
-        # Modeli çalıştır
+       
         results = model(img_np)
 
-        # Görsele bounding box çiz
+        # Görsele bounding box çizdim
         result_image = draw_bounding_boxes(original_image, results, threshold=0.5)
         result_image.save(f"static/results/{result_filename}")
 
-        # Tespit edilen plaka sayısı ve OCR ile plaka metinleri
+    
         detections = 0
         plate_texts = []
 
@@ -133,7 +132,7 @@ def predict():
                     detections += 1
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
 
-                    # OCR için plaka metnini çıkar
+                    # OCR için plaka metnini çıkardım
                     plate_text = extract_plate_text(original_image, (x1, y1, x2, y2))
                     plate_texts.append(plate_text)
 
