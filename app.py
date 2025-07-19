@@ -72,14 +72,14 @@ def extract_plate_text(image, coords):
         plate_region = plate_region.resize((plate_region.size[0]*3, plate_region.size[1]*3), Image.Resampling.LANCZOS)
         
         # Basit OCR denedim
-        try:
-            text = pytesseract.image_to_string(plate_region, lang='eng', config='--psm 7')
-            text = text.strip().replace('\n', '').replace('\r', '').replace(' ', '')
-            return text if text else "Metin okunamadı"
-        except Exception as ocr_error:
-            # OCR başarısız olursa basit bir metin döndür
-            return "66 AZ 377"  # Test için sabit plaka
-        
+    # try:
+            #text = pytesseract.image_to_string(plate_region, lang='eng', config='--psm 7')
+            #text = text.strip().replace('\n', '').replace('\r', '').replace(' ', '')
+            #return text if text else "Metin okunamadı"
+        #except Exception as ocr_error:
+            
+           # return "27 AA 100" 
+        #
     except Exception as e:
         return f"OCR Hatası: {str(e)}"
 
